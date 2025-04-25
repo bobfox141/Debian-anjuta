@@ -192,11 +192,10 @@ GPtrArray * anjuta_util_clone_string_gptrarray		(const GPtrArray* source);
  *
  * Create a new GObject for Anjuta. You can use ANJUTA_TYPE_ADD_INTERFACE
  * to add interfaces to it and should close it using ANJUTA_TYPE_END
+ * %%TODO%% remove this map and replace it with a function table. 
  */
-#define ANJUTA_TYPE_BEGIN(class_name, prefix, parent_type) \
-GType                                                     \
-prefix##_get_type (void)                                  \
-{                                                         \
+#define ANJUTA_TYPE_BEGIN(class_name, prefix, parent_type)\
+GType prefix##_get_type (void) {                          \
   static GType type = 0;                                  \
   if (!type)                                              \
     {                                                     \

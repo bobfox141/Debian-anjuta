@@ -314,7 +314,7 @@ anjuta_status_busy_push (AnjutaStatus *status)
 		g_hash_table_foreach (status->priv->widgets,
 							  foreach_widget_set_cursor, cursor);
 	g_object_unref (cursor);
-	gdk_flush ();
+	gdk_display_flush (display);
 	g_signal_emit_by_name (G_OBJECT (status), "busy", TRUE);
 }
 
@@ -485,10 +485,12 @@ anjuta_status_progress_add_ticks (AnjutaStatus *status, gint ticks)
 			gtk_widget_queue_draw (GTK_WIDGET (status->priv->progress_bar));
 			progressbar_window = gtk_widget_get_window (GTK_WIDGET(status->priv->progress_bar));
 			statusbar_window = gtk_widget_get_window (GTK_WIDGET(status->priv->status_bar));
+			G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 			if (progressbar_window != NULL)
 				gdk_window_process_updates (progressbar_window, TRUE);
 			if (statusbar_window != NULL)
 				gdk_window_process_updates (statusbar_window, TRUE);
+			G_GNUC_END_IGNORE_DEPRECATIONS
 		}
 	}
 }
@@ -511,11 +513,13 @@ anjuta_status_progress_pulse (AnjutaStatus *status, const gchar *text)
 	gtk_widget_queue_draw (GTK_WIDGET (statusbar));
 	gtk_widget_queue_draw (GTK_WIDGET (progressbar));
 	progressbar_window = gtk_widget_get_window (GTK_WIDGET (progressbar));
+	G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 	if (progressbar_window != NULL)
-		gdk_window_process_updates (progressbar_window, TRUE);
+    	gdk_window_process_updates (progressbar_window, TRUE);
 	statusbar_window = gtk_widget_get_window (GTK_WIDGET (statusbar));
 	if (statusbar_window != NULL)
 		gdk_window_process_updates (statusbar_window, TRUE);
+	G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 void
@@ -549,11 +553,13 @@ anjuta_status_progress_tick (AnjutaStatus *status,
 		gtk_widget_queue_draw (GTK_WIDGET (statusbar));
 		gtk_widget_queue_draw (GTK_WIDGET (progressbar));
 		progressbar_window = gtk_widget_get_window (GTK_WIDGET (progressbar));
+		G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 		if (progressbar_window != NULL)
 			gdk_window_process_updates (progressbar_window, TRUE);
 		statusbar_window = gtk_widget_get_window (GTK_WIDGET (statusbar));
 		if (statusbar_window != NULL)
 			gdk_window_process_updates (statusbar_window, TRUE);
+		G_GNUC_END_IGNORE_DEPRECATIONS
 	}
 	if (status->priv->current_ticks >= status->priv->total_ticks)
 		anjuta_status_progress_reset (status);
@@ -564,6 +570,8 @@ anjuta_status_progress_increment_ticks (AnjutaStatus *status, gint ticks,
 										const gchar *text)
 {
 	gfloat percentage;
+	GtkProgressBar *progressbar;
+	GtkWidget *statusbar;
 	GdkWindow *progressbar_window, *statusbar_window;
 		
 	g_return_if_fail (ANJUTA_IS_STATUS (status));
@@ -571,10 +579,7 @@ anjuta_status_progress_increment_ticks (AnjutaStatus *status, gint ticks,
 	
 	status->priv->current_ticks += ticks;
 	percentage = ((gfloat)status->priv->current_ticks)/status->priv->total_ticks;
-	
-	GtkProgressBar *progressbar;
-	GtkWidget *statusbar;
-	
+
 	if (text)
 		anjuta_status_set (status, "%s", text);
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (status->priv->progress_bar),
@@ -584,12 +589,13 @@ anjuta_status_progress_increment_ticks (AnjutaStatus *status, gint ticks,
 	gtk_widget_queue_draw (GTK_WIDGET (statusbar));
 	gtk_widget_queue_draw (GTK_WIDGET (progressbar));
 	progressbar_window = gtk_widget_get_window (GTK_WIDGET(progressbar));
+	G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 	if (progressbar_window != NULL)
 		gdk_window_process_updates (progressbar_window, TRUE);
 	statusbar_window = gtk_widget_get_window (GTK_WIDGET(statusbar));
 	if (statusbar_window != NULL)
 		gdk_window_process_updates (statusbar_window, TRUE);
-	
+	G_GNUC_END_IGNORE_DEPRECATIONS
 	if (status->priv->current_ticks >= status->priv->total_ticks)
 		anjuta_status_progress_reset (status);
 }
@@ -645,12 +651,13 @@ anjuta_status_set_title_window (AnjutaStatus *status, GtkWidget *window)
 void
 anjuta_status_set_title (AnjutaStatus *status, const gchar *title)
 {
+    const gchar *app_name = g_get_application_name();
 	g_return_if_fail (ANJUTA_IS_STATUS (status));
 	
 	if (!status->priv->window)
 		return;
 	
-	const gchar *app_name = g_get_application_name();
+	
 	if (title)
 	{
 		gchar* str = g_strconcat (title, " - ", app_name, NULL);
