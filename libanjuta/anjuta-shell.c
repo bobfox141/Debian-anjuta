@@ -111,7 +111,8 @@ static void
 on_destroy_widget_queue (gpointer data)
 {
 	GQueue *queue = (GQueue*)data;
-	g_queue_foreach (queue, (GFunc)on_widget_data_free, NULL);
+	g_queue_foreach (queue, (void *)on_widget_data_free, NULL);
+	// g_queue_foreach (queue, (GFunc)on_widget_data_free, NULL);
 	g_queue_free (queue);
 }
 
