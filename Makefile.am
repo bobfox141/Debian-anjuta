@@ -10,7 +10,7 @@ SUBDIRS = \
 
 dist_doc_DATA = \
 	MAINTAINERS\
-	README\
+	README.md\
 	COPYING\
 	AUTHORS\
 	ChangeLog\
@@ -38,7 +38,7 @@ EXTRA_DIST = \
 
 gnomerelease:
 	scp *.tar.bz2 master.gnome.org:
-	
+
 sfrelease:
 	scp *.tar.bz2 clubfan@frs.sf.net:uploads
 
