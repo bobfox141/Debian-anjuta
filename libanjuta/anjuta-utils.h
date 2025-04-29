@@ -204,12 +204,14 @@ GType prefix##_get_type (void) {                          \
           sizeof (class_name##Class),                     \
           (GBaseInitFunc) NULL,                           \
           (GBaseFinalizeFunc) NULL,                       \
-          (GClassInitFunc) prefix##_class_init,           \
+	  /* (GClassInitFunc) prefix##_class_init, */		  \
+	  (void *) prefix##_class_init,                       \
           (GClassFinalizeFunc) NULL,                      \
           NULL,                                           \
           sizeof (class_name),                            \
           0, /* n_preallocs */                            \
-          (GInstanceInitFunc) prefix##_instance_init,     \
+	  /*  (GInstanceInitFunc) prefix##_instance_init, */  \
+	    (void *) prefix##_instance_init,
         };                                                \
                                                           \
         type = g_type_register_static (parent_type,       \
