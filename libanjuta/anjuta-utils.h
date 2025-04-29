@@ -211,7 +211,7 @@ GType prefix##_get_type (void) {                          \
           sizeof (class_name),                            \
           0, /* n_preallocs */                            \
 	  /*  (GInstanceInitFunc) prefix##_instance_init, */  \
-	    (void *) prefix##_instance_init,
+	    (void *) prefix##_instance_init,                  \
         };                                                \
                                                           \
         type = g_type_register_static (parent_type,       \

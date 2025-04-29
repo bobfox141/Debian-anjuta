@@ -1,4 +1,4 @@
-/*
+/* -*- mode:c++ -*-
  * anjuta-encodings.c
  * This file is part of anjuta
  *
